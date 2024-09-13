@@ -1,0 +1,117 @@
+O Hotel Management System é um sistema de gerenciamento de reservas para hotéis desenvolvido em SQL. O sistema é projetado para armazenar e gerenciar informações sobre hóspedes, quartos e reservas, e inclui funcionalidades básicas para criar, ler, atualizar e excluir dados.
+
+CREATE DATABASE HotelManagementSystem;
+
+USE HotelManagementSystem;
+2. Criação das Tabelas
+sql
+Copiar código
+CREATE TABLE Hóspedes (
+    id_hospede INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    telefone VARCHAR(20),
+    email VARCHAR(100)
+);
+
+CREATE TABLE Quartos (
+    id_quarto INT AUTO_INCREMENT PRIMARY KEY,
+    numero INT NOT NULL,
+    tipo VARCHAR(50),
+    preco DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE Reservas (
+    id_reserva INT AUTO_INCREMENT PRIMARY KEY,
+    id_hospede INT,
+    id_quarto INT,
+    data_checkin DATE,
+    data_checkout DATE,
+    FOREIGN KEY (id_hospede) REFERENCES Hóspedes(id_hospede),
+    FOREIGN KEY (id_quarto) REFERENCES Quartos(id_quarto)
+);
+3. Inserção de Dados
+sql
+Copiar código
+INSERT INTO Hóspedes (nome, telefone, email) VALUES
+('João Silva', '1234567890', 'joao.silva@example.com'),
+('Maria Oliveira', '0987654321', 'maria.oliveira@example.com'),
+('Carlos Santos', '1122334455', 'carlos.santos@example.com'),
+('Ana Costa', '2233445566', 'ana.costa@example.com'),
+('Pedro Almeida', '3344556677', 'pedro.almeida@example.com');
+
+INSERT INTO Quartos (numero, tipo, preco) VALUES
+(101, 'Single', 100.00),
+(102, 'Double', 150.00),
+(103, 'Suite', 300.00),
+(104, 'Single', 120.00),
+(105, 'Double', 180.00),
+(106, 'Suite', 350.00),
+(107, 'Single', 110.00),
+(108, 'Double', 160.00),
+(109, 'Suite', 320.00),
+(110, 'Single', 130.00);
+
+INSERT INTO Reservas (id_hospede, id_quarto, data_checkin, data_checkout) VALUES
+(1, 101, '2024-09-01', '2024-09-05'),
+(2, 103, '2024-09-10', '2024-09-15'),
+(3, 105, '2024-09-20', '2024-09-25'),
+(4, 107, '2024-09-25', '2024-09-30'),
+(5, 109, '2024-10-01', '2024-10-05');
+4. Consultas
+sql
+Copiar código
+-- Listar todos os hóspedes com suas reservas e detalhes do quarto
+SELECT 
+    H.nome AS NomeHospede,
+    H.telefone AS TelefoneHospede,
+    H.email AS EmailHospede,
+    R.data_checkin AS DataCheckin,
+    R.data_checkout AS DataCheckout,
+    Q.numero AS NumeroQuarto,
+    Q.tipo AS TipoQuarto,
+    Q.preco AS PrecoQuarto
+FROM 
+    Hóspedes H
+JOIN 
+    Reservas R ON H.id_hospede = R.id_hospede
+JOIN 
+    Quartos Q ON R.id_quarto = Q.id_quarto;
+
+-- Listar todos os quartos disponíveis para um determinado período
+SELECT 
+    Q.numero AS NumeroQuarto,
+    Q.tipo AS TipoQuarto,
+    Q.preco AS PrecoQuarto
+FROM 
+    Quartos Q
+LEFT JOIN 
+    Reservas R ON Q.id_quarto = R.id_quarto 
+    AND R.data_checkin <= '2024-09-10' 
+    AND R.data_checkout >= '2024-09-01'
+WHERE 
+    R.id_reserva IS NULL;
+5. Atualizações
+sql
+Copiar código
+-- Atualizar informações de contato de um hóspede específico
+UPDATE Hóspedes
+SET telefone = '5555555555', email = 'novo.email@example.com'
+WHERE id_hospede = 2;
+
+-- Modificar o preço de um quarto
+UPDATE Quartos
+SET preco = 170.00
+WHERE id_quarto = 5;
+6. Exclusões
+sql
+Copiar código
+-- Excluir uma reserva específica
+DELETE FROM Reservas
+WHERE id_reserva = 3;
+
+-- Remover um hóspede e todas as reservas associadas
+DELETE FROM Reservas
+WHERE id_hospede = 4;
+
+DELETE FROM Hóspedes
+WHERE id_hospede = 4;
