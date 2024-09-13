@@ -1,0 +1,29 @@
+# Ignorar arquivos de configuração do banco de dados
+*.db
+*.sql
+
+# Ignorar arquivos de log
+*.log
+
+# Ignorar arquivos temporários e cache
+*.tmp
+*.swp
+*.bak
+
+# Ignorar diretórios específicos de ferramentas de desenvolvimento
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignorar arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar arquivos gerados por ferramentas de build
+node_modules/
+dist/
+build/
+
+# Ignorar arquivos de configuração local
+.env
